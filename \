@@ -99,7 +99,6 @@ def steady_blink_animation (number_of_blinks, blink_duration):
 
 def pause (animation_duration):
     button_has_been_pushed = False
-    print(is_button_pressed())
     now = time.time()
     animation_end_time = now + animation_duration
 
@@ -109,13 +108,11 @@ def pause (animation_duration):
             break
 
         now = time.time()
-    print(is_button_pressed())
-    print("button_has_been_pushed", button_has_been_pushed)
+
     return button_has_been_pushed
 
 
 def demo ():
-    x = [1,2,3]
     button_has_been_pushed = False
     steps = [
         lambda: blink_rate_change_animation(1, .05, .165),
@@ -126,19 +123,16 @@ def demo ():
     ]
     current_step = 0
     while not button_has_been_pushed:
+        button_has_been_pushed = steps[current_step % 1]()
         
-        y = current_step % len(x)
-        button_has_been_pushed = steps[current_step % len(steps)]()
-        current_step += 1
-        
-    while is_button_pressed():
-        pass
+    return button_has_been_pushed
 
 
 
 
 
 def level_1_question ():
+    print("l1q")
     button_has_been_pushed = False
     steps = [
         lambda: pause(.6),
@@ -147,30 +141,26 @@ def level_1_question ():
     ]
     current_step = 0
     while not button_has_been_pushed:
-        button_has_been_pushed = steps[current_step % len(steps)]()
+        button_has_been_pushed = steps[current_step % 1]()
         current_step += 1
         
         
 
 def level_1_answer ():
-    print("a")
+    print("l1a")
     button_presses = 0
     time_since_last_action = 0
     last_button_valence = False
-    while time_since_last_action < 2 or not is_button_pressed():
+    while time_since_last_action < 2 and not is_button_pressed():
         current_button_valence = is_button_pressed()
-
-        if not last_button_valence and current_button_valence:
-            time_since_last_action = time.time()
-
         if last_button_valence and not current_button_valence:
-            time_since_last_action = time.time()
             button_presses += 1
-
     return button_presses    
 
 def level_1 ():
     level_1_question()
+    while level_1_answer() != 3:
+        level_1_question()
 
 
 
